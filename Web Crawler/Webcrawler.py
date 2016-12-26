@@ -25,14 +25,14 @@ class WebCrawler(threading.Thread):
         
         beautiful_soup_object = BeautifulSoup(request, 'lxml')
         
-        print("Saving The Source Code")
+        print("Saving The Response Code")
         time.sleep(3)
-        with open('Source Code.txt', 'w') as file:
+        with open('Response Code.txt', 'w') as file:
             file.write(str(html))
             file.close()
         
         time.sleep(3)
-        print("Source Code Saved As \'Source Code.txt\'")
+        print("Source Code Saved As \'Response Code.txt\'")
         
         print("\n------------------------- IP ADDRESS -------------------------\n")
         cmd = "host " + self.base_url
