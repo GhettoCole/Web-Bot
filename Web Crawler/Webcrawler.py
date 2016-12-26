@@ -19,19 +19,19 @@ def crawler():
     # http header
     print("-------------------HTTP HEADERS-----------------")
     print(request.info())
-    print('\n----------------- CONTENT-TYPE: ------------------\n', request.info().get('Content-Type'))
+    
     soup_object = BeautifulSoup(request, 'lxml')
     
     file = open('Response Code.html', 'w')
     file.write(str(request))
     file.close()
     
-    print("\n------------------- IP Adress -------------------")
+    print("\n------------------- IP Address -------------------")
     cmd = "host " + correct_url  # linux command to find url's ip address
     process = os.popen(cmd)
     ip_add = str(process.read())
     count = 14
-    index_lvl = ip_add.find('has adress') + count
+    index_lvl = ip_add.find('has address') + count
     print('IP Address: ' + ip_add[index_lvl:])
 
 
