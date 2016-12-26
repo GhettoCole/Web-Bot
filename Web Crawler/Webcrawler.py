@@ -2,60 +2,88 @@
 # Programmer: Given Lepita
 # Python Version: 3.x
 # Date: 2016
-import os
-from random import randint
-import urllib.request
-import urllib
-from urllib.error import URLError
+import os, threading, urllib
+from random import *
+from urllib.request import *
 from bs4 import BeautifulSoup
+from urllib.error import URLError
+import time
 
 
+class WebCrawler(threading.Thread):
+    def __init__(self, base_url):
+        threading.Thread.__init__(self)
+        self.base_url = "http://" + base_url
+        
 
+        
+    def run(self):
+        request = urlopen(self.base_url)
+        html = request
+        print("------------------- HTTP HEADERS -----------------\n")
+        print(request.info())
+        
+        beautiful_soup_object = BeautifulSoup(request, 'lxml')
+        
+        print("Saving The Source Code")
+        time.sleep(3)
+        with open('Source Code.txt', 'w') as file:
+            file.write(str(html))
+            file.close()
+        
+        time.sleep(3)
+        print("Source Code Saved As \'Source Code.txt\'")
+        
+        print("\n------------------------- IP ADDRESS -------------------------\n")
+        cmd = "host " + self.base_url
+        process = os.popen(cmd)
+        ip_address = str(process.read())
+        counter_start = 14
+        index_lvl = ip_address.find('has address') + counter_start
+        print('IP ADDRESS: ', ip_address[index_lvl:])
+        
+        print("\n---------------------- RETRIEVING LINKS ----------------------\n")
+        try:
+            link_number = 1
+            for link in beautiful_soup_object.find_all('a'):
+                print("Link {}'s Title: {}".format(link_number, link.text))
+                link_number += 1
+        except NameError:
+            print("Links Not Found")
+            
+        print('\n------------------------------- RETRIEVING PARAGRAPHS ------------------------------')
+        for paragraph in beautiful_soup_object.find_all('p'):
+            print(paragraph.text)
+            
 
-def crawler():
-    web_url = str(input('Enter URL to crawl: '))
-    correct_url = 'http://' + web_url  # concat with http protocol for valid url
-    request = urllib.request.urlopen(correct_url)
-    # http header
-    print("-------------------HTTP HEADERS-----------------")
-    print(request.info())
+def Main():
+    first_url = str(input("Enter URL To Crawl: "))
     
-    soup_object = BeautifulSoup(request, 'lxml')
     
-    file = open('Response Code.html', 'w')
-    file.write(str(request))
-    file.close()
+    first_thread = WebCrawler(first_url)
+    first_thread.run()
     
-    print("\n------------------- IP Address -------------------")
-    cmd = "host " + correct_url  # linux command to find url's ip address
-    process = os.popen(cmd)
-    ip_add = str(process.read())
-    count = 14
-    index_lvl = ip_add.find('has address') + count
-    print('IP Address: ' + ip_add[index_lvl:])
+    second_url = str(input("Enter Another URL To Crawl: "))
+    
+    second_thread = WebCrawler(second_url)
+    second_thread.run()
+    
+    
+    third_url = str(input("Enter Another URL To Crawl: "))
+    third_thread = WebCrawler(third_url)
+    third_thread.run()
+    
+
+if __name__ == '__main__':
+    Main()
 
 
-    print("\n--------------------- RETRIEVING LINKS ---------------")
-    try:
-        link_number= 1
-        for link in soup_object.find_all('a'):
 
-            print("Link {}'s Title: {}".format(link_number, link.text))
-            link_number += 1
-    except KeyError:
-        print("No \'href\' Attributes found")
 
-    print('\n------------------------ RETRIEVING PARAGRAPHS ----------------------------')
 
-    for para in soup_object.find_all('p'):
-        print(para.text)
 
-try:
-    crawler()
-except (URLError, ImportError, RuntimeError):
-    print("An error due to URLError, ImporError or RuntimeError Has Occurred.\nPlease Install The Necessary Modules")
-except:
-    print("An \'Unknown\' Error Occurred")        
+
+        
 
 
 def take_img(url):
