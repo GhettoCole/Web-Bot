@@ -2,13 +2,12 @@
 # Programmer: Given Lepita
 # Python Version: 3.x
 # Date: 2016
-import os, threading, urllib
+import os, threading, urllib, requests
 from random import *
 from urllib.request import *
 from bs4 import BeautifulSoup
 from urllib.error import URLError
 import time
-
 
 class WebCrawler(threading.Thread):
     def __init__(self, base_url):
@@ -24,23 +23,24 @@ class WebCrawler(threading.Thread):
         print(request.info())
         
         beautiful_soup_object = BeautifulSoup(request, 'lxml')
+        source_code = requests.get(self.base_url)
         
-        print("Saving The Response Code")
+        print("Saving The Source Code")
         time.sleep(3)
-        with open('Response Code.txt', 'w') as file:
-            file.write(str(html))
-            file.close()
+        contents = open('Source Code.txt', 'wb')
+        for bits in source_code.iter_content(10000):
+            contents.write(bits)
+
+        contents.close()
         
         time.sleep(3)
-        print("Source Code Saved As \'Response Code.txt\'")
+        print("Source Code Saved As \'Source Code.txt\'")
         
         print("\n------------------------- IP ADDRESS -------------------------\n")
-        cmd = "host " + self.base_url
+        cmd = "nslookup " + self.base_url
         process = os.popen(cmd)
         ip_address = str(process.read())
-        counter_start = 14
-        index_lvl = ip_address.find('has address') + counter_start
-        print('IP ADDRESS: ', ip_address[index_lvl:])
+        print('IP ADDRESS: ', ip_address)
         
         print("\n---------------------- RETRIEVING LINKS ----------------------\n")
         try:
@@ -78,14 +78,6 @@ if __name__ == '__main__':
     Main()
 
 
-
-
-
-
-
-        
-
-
 def take_img(url):
     start_n = randint(1, 9000)
     end_n = str(start_n) + "image.jpg" # if need be, change the image extension such as jpeg, jpg, png ect.
@@ -96,11 +88,8 @@ print('\n------------------------ DOWNLOADING IMAGES ---------------------------
 download = str(input("Enter the URL of the image to download: "))
 
 
-
 try:
     take_img(download)
 except:
     print("An \'Unknown\' Error Occurred.")
-
-
 
