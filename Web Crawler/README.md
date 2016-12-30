@@ -1,8 +1,6 @@
 # Overview
 
-This is an open source website crawler written in Python. Any contribution or ideas/suggestions are allowed.
-You are allowed to copy or modify this program in any way you want.
-
+This is an open source website crawler written in Python3. 
 
 # Prerequisites
 *** Install BeautifulSoup ***
