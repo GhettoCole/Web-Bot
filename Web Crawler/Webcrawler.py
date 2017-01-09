@@ -1,7 +1,32 @@
-# Project: Web Crawler
+# Project: Web Bot
 # Programmer: Given Lepita
 # Python Version: 3.x
 # Date: 2017
+
+# FEATURES
+# 1 - Saves the source code
+# 2 - Can download images
+# 3 - Can retrieve image links from a site specified
+# 4 - HTTP headers
+# 5 - Uses HTTP(S) - For preventing MITM attacks
+# 6 - Provides the whois info for the crawled site
+# 7 - Save an image with your name of choice
+# 8 - Gives off the IP address of the site crawled
+# 9 - Performs an nmap scan for looking up on open ports
+# 10 - Logs the process for user debugging and running processes
+# 11 - Uses headers to pose as a human rather than a robot
+# 12 - Saves you the links of the website crawled
+# 13 - Prints out the paragraphs within the site
+# 14 - Shows you the directory before and after the process to show that files have been saved
+# 15 - Its free to use, copy, distribute and modify. But remember to mension the real owner of the program(Given Lepita)
+# 16 - More is coming --> saving pdfs, multiple images at once, crawling the deep web, cookies and proxy servers.
+# Be patience and keep coding
+
+
+# REMEMBER Stealing code and posing it as yours is a disgrace and shows how much of a failure you are as a programmer
+
+
+
 import os, urllib, requests, time, logging
 from random import *
 from urllib.request import *
@@ -92,7 +117,7 @@ class WebCrawler():
             print(paragraph.text)
 
 
-        print("\n-------------------------------------- IMAGE Links For " + str(self.base_url) + " -------------------------------------")
+        print("\n-------------------------------------- IMAGE Links For " + str(self.base_url) + " -------------------------------------\n")
         logging.debug("Step 5 - Find all links of this pages images")
         # works for the images stored on the same server as of the web page
         image_urls = set()
@@ -107,7 +132,33 @@ class WebCrawler():
 
         image_links.close()
 
-        
+    def network_mapper(self):
+        """Fast nmap scan"""
+        logging.debug("nmap scan for open ports")
+        command = "nmap -F " + self.base_url[8:] #https:// - taken out
+        process = os.popen(command)
+        output = str(process.read())
+        print("\n------------------------------------------------ Nmap Fast Scan Results ---------------------------------------")
+        print(output+"\n")
+
+    def whois(self):
+        """Fast nmap scan"""
+        command = "whois " + self.base_url[8:] #https:// - taken out
+        process = os.popen(command)
+        output = str(process.read())
+        print("\n------------------------------------------------ Whois info Results ---------------------------------------")
+        print(output+"\n")
+
+    def crawler_robots(self):
+        "Robots.txt"
+        try:
+            request = urllib.request.urlopen(self.base_url+'/robots.txt')
+            answer = request
+            bs_robots = BeautifulSoup(answer, 'lxml')
+            print("\n------------------------------------------------ Robots information (For caution while scraping) ------------------------------------------------")
+            print(bs_robots.string)
+        except Exception as e:
+            print("Error: ", str(e))
 
 def take_img(url):
     start_n = name
@@ -123,8 +174,11 @@ download = str(input("Enter the URL of the image to download: "))
 def Main():
     try:
         url = str(input("Enter URL to crawl: "))
-        spider = WebCrawler(url)
-        spider.crawling_spider()
+        bot = WebCrawler(url)
+        bot.crawling_spider()
+        bot.crawler_robots()
+        bot.network_mapper()
+        bot.whois()
         logging.info('Crawled successfully')
     except (URLError, HTTPError):
         print("An error occurred. It may be due to an HTTPError, check if your internet connection is running.")
