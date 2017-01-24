@@ -20,8 +20,3 @@ Linux   - 1. Open Terminal/Shell
 # Authors
 Given Lepita - initial work
 
-
-# Acknowledgments
-
-This is inspired by the beautiful work of open source projects. And I hope for contributions that will bring out the best of
-You as a programmer and the ability of the Python programming language.
