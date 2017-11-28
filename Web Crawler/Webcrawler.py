@@ -108,34 +108,6 @@ class WebCrawler():
 
         image_links.close()
 
-    def network_mapper(self):
-        """Fast nmap scan"""
-        logging.debug("nmap scan for open ports")
-        command = "nmap -F " + self.base_url[8:] #https:// - taken out
-        process = os.popen(command)
-        output = str(process.read())
-        print("\n------------------------------------------------ Nmap Fast Scan Results ---------------------------------------")
-        print(output+"\n")
-
-    def whois(self):
-        """Fast nmap scan"""
-        command = "whois " + self.base_url[8:] #https:// - taken out
-        process = os.popen(command)
-        output = str(process.read())
-        print("\n------------------------------------------------ Whois info Results ---------------------------------------")
-        print(output+"\n")
-
-    def crawler_robots(self):
-        "Robots.txt"
-        try:
-            request = urllib.request.urlopen(self.base_url+'/robots.txt')
-            answer = request
-            bs_robots = BeautifulSoup(answer, 'lxml')
-            print("\n------------------------------------------------ Robots information (For caution while scraping) ------------------------------------------------")
-            print(bs_robots.string)
-        except Exception as e:
-            print("Error: ", str(e))
-
 def take_img(url):
     start_n = name
     end_n = str(start_n) + "image.jpg" # if need be, change the image extension such as jpeg, jpg, png ect.
@@ -152,9 +124,6 @@ def Main():
         url = str(input("Enter URL to crawl: "))
         bot = WebCrawler(url)
         bot.crawling_spider()
-        bot.crawler_robots()
-        bot.network_mapper()
-        bot.whois()
         logging.info('Crawled successfully')
     except (URLError, HTTPError):
         print("An error occurred. It may be due to an HTTPError, check if your internet connection is running.")
