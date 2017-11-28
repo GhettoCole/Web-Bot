@@ -54,10 +54,8 @@ class NetworkIntelligence(WebCrawler):
 
 
 class ScraperInfo(WebCrawler):
-	
 	def __init__(self):
 		super().__init__(base_url)
-	
 
 	def sourceCode(self, directory='/', name='source code'):
 		request = urllib.urlopen(self.base_url)
@@ -68,9 +66,7 @@ class ScraperInfo(WebCrawler):
 		file = "{}.html".format(name)
 		with open(str(directory)+file, "w") as f:
 			f.write(htmlCode)
-		# flush cache and close
+		# flush and close
 		f.flush()
 		f.close()
 		print("Your file has been saved in {} as {}".format(directory, file))
-	
-
