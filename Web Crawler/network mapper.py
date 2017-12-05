@@ -1,4 +1,6 @@
-import os, logging, requests, time, urllib
+# Programmer: Given Lepita
+import os, logging, requests, time
+from urllib.request import urlretrieve, urlopen, Request
 from crawler import WebCrawler
 from bs4 import BeautifulSoup
 
@@ -6,7 +8,7 @@ from bs4 import BeautifulSoup
 # Subclass of the crawler
 class NetworkIntelligence(WebCrawler):
 
-	def __init__(self):
+	def __init__(self, base_url):
     	# inherit superclass variable
 		super().__init__(base_url)
 
@@ -32,7 +34,7 @@ class NetworkIntelligence(WebCrawler):
 			robots = robotsReq # store page
 			if robotsReq != None:
 				bsRobots = BeautfulSoup(robots, "lxml")
-				style = "-" * 45
+				style = ("-" * 45)
 				print(style + " Robots.txt " + style)
 				print(bsRobots.string)
 			else:
@@ -54,12 +56,13 @@ class NetworkIntelligence(WebCrawler):
 
 
 class ScraperInfo(WebCrawler):
-	def __init__(self):
+	def __init__(self, base_url):
 		super().__init__(base_url)
 
 	def sourceCode(self, directory='/', name='source code'):
 		request = urllib.urlopen(self.base_url)
-		# create a bs4 object
+		# create a bs4 object, change feature to HTML.parser
+		# if necessary
 		bsObj = BeautifulSoup(request, "lxml")
 		htmlCode = bsObj.prettify()
 
@@ -70,3 +73,34 @@ class ScraperInfo(WebCrawler):
 		f.flush()
 		f.close()
 		print("Your file has been saved in {} as {}".format(directory, file))
+	
+	def HTTP_headers(self):
+    	request = urllib.urlopen(self.base_url)
+		# HTTP headers
+		TAB = "\t" * 5
+		print(TAB, request.info())
+	
+	def siteImages(self):
+		links = set()
+		request = urllib.urlopen(self.base_url)
+		bsObj = BeautifulSoup(request, "lxml")
+		for link in bsObj.find_all('a'):
+			if 'src' in link.attrs:
+				# image has source
+				downloadURL = link.attrs['src']
+				print("[+] Storing => {}".format(downloadURL))
+				links.add(downloadURL)
+			else:
+				pass
+		
+		index = 0
+		name = "{} .jpg".format(str(index))
+		directory = os.getcwd()
+		try:
+			for link in links:
+        		urlretrieve(link, name)
+				index += 1
+		except Exception as e:
+			print("Error => ", e)
+	
+			

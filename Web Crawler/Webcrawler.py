@@ -5,7 +5,7 @@
 
 import os, urllib, requests, time, logging
 from random import *
-from urllib.request import *
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import urllib.parse
 from urllib.error import URLError, HTTPError
@@ -18,12 +18,12 @@ class WebCrawler():
     def crawling_spider(self):
         # create the log file for debugging
         logging.basicConfig(filename='web_crawler.log', level=logging.DEBUG)
-        headers = {}
-        headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+            }
 
         logging.debug('Step 1 - Define headers and URL to avoid restrictions as a robot')
-        # Add headers to avoid restrictions of robots and bypass the API
-        request_politely = urllib.request.Request(self.base_url, headers=headers)
+        request_politely = Request(self.base_url, headers=headers)
         request = urlopen(request_politely)
         logging.info('URL parsed successfully with no problems')
         html = request
